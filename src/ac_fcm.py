@@ -18,8 +18,8 @@ class AcFCM(BFCM):
         V = self.V.copy()
 
         V = np.delete(V, absorbed_c, axis=0)
-        U[prior_c] += U[absorbed_c]
-        U = np.delete(U, absorbed_c, axis=0)
+        U[:, prior_c] += U[:, absorbed_c]
+        U = np.delete(U, absorbed_c, axis=1)
 
         return U, V
 
