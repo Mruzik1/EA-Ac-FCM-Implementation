@@ -2,7 +2,7 @@ import numpy as np
 
 
 class BFCM:
-    def __init__(self, X: np.ndarray, init_c: int, m: float = 2.0):
+    def __init__(self, X: np.ndarray, init_c: int, m: float):
         self.X = X
         self.c = init_c
         self.m = m
@@ -13,19 +13,24 @@ class BFCM:
         self.V = np.random.rand(init_c, X.shape[1])
 
     # getting distance
-    def get_d(self) -> np.ndarray:
-        return np.sum((self.X[:, None] - self.V)**2, axis=2)
+    def get_d(self, V: np.ndarray = None) -> np.ndarray:
+        V = self.V if V is None else V
+        return np.sum((self.X[:, None] - V)**2, axis=2)
 
-    # getting a lower obj. func. value J_{fcm} (normalized)
-    def get_j_fcm(self) -> float:
-        return np.sum(self.U**self.m * self.get_d()) / self.X.shape[0]
+    # getting a lower obj. func. value J_{fcm}
+    def get_j_fcm(self, U: np.ndarray = None, V: np.ndarray = None) -> float:
+        U = self.U if U is None else U
+        V = self.V if V is None else V
+        return np.sum(U**self.m * self.get_d(V))
 
     # getting an upper obj. func. value V_{XB}
-    def get_v_xb(self) -> float:
-        sep = np.min([np.sqrt(np.sum((self.V[i] - self.V[j]) ** 2))
+    def get_v_xb(self, U: np.ndarray = None, V: np.ndarray = None) -> float:
+        U = self.U if U is None else U
+        V = self.V if V is None else V
+        sep = np.min([np.sum((V[i] - V[j])**2)
                     for i in range(self.c) for j in range(self.c) if i != j])
         
-        return self.get_j_fcm() / sep
+        return self.get_j_fcm(U, V) / (sep*self.X.shape[0])
 
     # optimizing a model, getting a membership matrix and cluster centroids
     def run(self, cmax: int = 200, eps: float = 1e-4) -> tuple:
