@@ -24,18 +24,20 @@ class BFCM:
         return np.sum(U**self.m * self.get_d(V))
 
     # getting an upper obj. func. value V_{XB}
-    def get_v_xb(self, U: np.ndarray = None, V: np.ndarray = None) -> float:
+    def get_v_xb(self, U: np.ndarray = None, V: np.ndarray = None, c: int = None) -> float:
         U = self.U if U is None else U
         V = self.V if V is None else V
+        c = self.c if c is None else c
+
         sep = np.min([np.sum((V[i] - V[j])**2)
-                    for i in range(self.c) for j in range(self.c) if i != j])
-        
+                    for i in range(c) for j in range(c) if i != j])
         return self.get_j_fcm(U, V) / (sep*self.X.shape[0])
 
     # optimizing a model, getting a membership matrix and cluster centroids
-    def run(self, cmax: int = 200, eps: float = 1e-4) -> tuple:
+    def run(self, cmax: int = 200, eps: float = 1e-4, logs_enabled: bool = True) -> tuple:
         for i in range(cmax):
-            print(f'{i}) J_fcm: {self.get_j_fcm()}, V_XB: {self.get_v_xb()}')
+            if logs_enabled:
+                print(f'{i}) J_fcm: {self.get_j_fcm()}, V_XB: {self.get_v_xb()}')
             old_V = self.V.copy()
 
             self.V = np.dot(self.U.T**self.m, self.X) / np.sum(self.U**self.m, axis=0)[:, None]
