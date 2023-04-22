@@ -34,7 +34,7 @@ class BFCM:
         return self.get_j_fcm(U, V) / (sep*self.X.shape[0])
 
     # optimizing a model, getting a membership matrix and cluster centroids
-    def run(self, cmax: int = 200, eps: float = 1e-4, logs_enabled: bool = True) -> tuple:
+    def run(self, cmax: int = 10000, eps: float = 1e-4, logs_enabled: bool = True) -> tuple:
         for i in range(cmax):
             if logs_enabled:
                 print(f'{i}) J_fcm: {self.get_j_fcm()}, V_XB: {self.get_v_xb()}')
