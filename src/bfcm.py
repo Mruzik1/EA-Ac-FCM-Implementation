@@ -8,9 +8,9 @@ class BFCM:
         self.m = m
 
         # initializing cluster centroids and a membership matrix + normalizing
-        self.U = np.random.rand(X.shape[0], init_c)
+        self.U = np.random.normal(size=(X.shape[0], init_c))
         self.U = self.U / np.sum(self.U, axis=1)[:, None]
-        self.V = np.random.rand(init_c, X.shape[1])
+        self.V = np.random.uniform(0., np.max(self.X), size=(init_c, X.shape[1]))
 
     # getting distance
     def get_d(self, V: np.ndarray = None) -> np.ndarray:
