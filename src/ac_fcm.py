@@ -34,7 +34,7 @@ class AcFCM(BFCM):
 
     # check and update clusters for step 4
     def update_clusters_4(self, new_U: np.ndarray, new_V: np.ndarray, eps: float) -> bool:
-        if self.get_v_xb(new_U, new_V, self.c-1) < self.get_v_xb()-eps:
+        if self.get_v_xb(new_U, new_V, self.c-1) < self.get_v_xb()+eps:
             self.V = new_V
             self.U = new_U
             self.c -= 1
@@ -48,14 +48,14 @@ class AcFCM(BFCM):
         self.U, self.V = self.absorbtive_criteria()
         super().run(logs_enabled=False)
 
-        if self.get_v_xb(old_U, old_V)-eps > self.get_v_xb(c=self.c-1):
+        if self.get_v_xb(old_U, old_V)+eps > self.get_v_xb(c=self.c-1):
             self.c -= 1
             return False
         self.U, self.V = old_U, old_V
         return True
             
     # running an algorithm
-    def run(self, eps: float = 1e-5) -> np.ndarray:
+    def run(self, eps: float = 1e-4) -> np.ndarray:
         # step 1 + 2
         super().run(logs_enabled=False)
         while self.c > 2:
