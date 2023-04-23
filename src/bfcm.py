@@ -8,8 +8,8 @@ class BFCM:
         self.m = m
 
         # initializing cluster centroids and a membership matrix + normalizing
-        self.U = np.random.normal(size=(X.shape[0], init_c))
-        self.U = self.U / np.sum(self.U, axis=1)[:, None]
+        self.U = np.random.rand(X.shape[0], init_c)
+        self.U /= np.sum(self.U, axis=1)[:, None]
         self.V = np.random.uniform(np.mean(self.X)-1, np.mean(self.X)+1, size=(init_c, X.shape[1]))
 
     # getting distance
