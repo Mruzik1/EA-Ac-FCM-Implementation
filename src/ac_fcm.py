@@ -55,18 +55,15 @@ class AcFCM(BFCM):
         return True
             
     # running an algorithm
-    def run(self, eps: float = 1e-4) -> np.ndarray:
+    def run(self, eps: float = 1e-5) -> float:
         # step 1 + 2
         super().run()
-        while self.c > 2:
-            print(f'V_XB: {self.get_v_xb()}, clusters: {self.c}')
-            
+        while self.c > 2:            
             # step 3 + 4
             if self.update_clusters_4(*self.absorbtive_criteria(), eps=eps):
                 continue
-
             # step 5
             if self.update_clusters_5(eps=eps):
                 break
         # step 6
-        return self.U, self.V
+        return self.get_v_xb()
