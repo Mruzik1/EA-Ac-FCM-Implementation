@@ -34,12 +34,12 @@ class BFCM:
         return self.get_j_fcm(U, V) / (sep*self.X.shape[0])
 
     # optimizing a model, getting a membership matrix and cluster centroids
-    def run(self, cmax: int = 10000, eps: float = 1e-5) -> tuple:
+    def run(self, cmax: int = 1000, eps: float = 0.005) -> tuple:
         for i in range(cmax):
             old_V = self.V.copy()
             self.V = np.dot(self.U.T**self.m, self.X) / np.sum(self.U**self.m, axis=0)[:, None]
-            self.U = 1 / np.power(self.get_d(), 1 / (self.m - 1))
-            self.U = self.U / np.sum(self.U, axis=1)[:, None]
+            self.U = 1 / np.power(self.get_d(), 1 / (self.m - 1)) + 1e-10
+            self.U = self.U / np.sum(self.U, axis=1)[:, None] + 1e-10
 
             if np.linalg.norm(self.V - old_V) < eps:
                 break

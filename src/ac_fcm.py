@@ -55,10 +55,10 @@ class AcFCM(BFCM):
         return True
             
     # running an algorithm
-    def run(self, eps: float = 1e-5) -> float:
+    def run(self, eps: float = 0.005) -> float:
         # step 1 + 2
         super().run()
-        while self.c > 2:            
+        while self.c > 2:
             # step 3 + 4
             if self.update_clusters_4(*self.absorbtive_criteria(), eps=eps):
                 continue
